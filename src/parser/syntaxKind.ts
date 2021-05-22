@@ -19,6 +19,7 @@ enum SyntaxKind
     BinaryExpression = 'BinaryExpression',
     ParenthesizedExpression = 'ParenthesizedExpression',
     LiteralExpression = 'LiteralExpression',
+    ArrayLiteralExpression = 'ArrayLiteralExpression',
     VariableExpression = 'VariableExpression',
     CallExpression = 'CallExpression',
 }

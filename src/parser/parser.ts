@@ -1,13 +1,14 @@
 import * as SyntaxNodes from "./syntaxNodes";
-import CallArgumentsList from "./callArgumentsList";
+import CallArgumentsList from "./lists/callArgumentsList";
 import Diagnostic from "../diagnostic/diagnostic";
 import DiagnosticCodes from "../diagnostic/diagnosticCodes";
 import DiagnosticError from "../diagnostic/diagnosticError";
-import FunctionParametersList from "./functionParametersList";
+import FunctionParametersList from "./lists/functionParametersList";
 import OperatorOrder from "./operatorOrder";
 import { SyntaxNode } from "./syntaxNodes";
 import Token from "../lexer/token";
 import TokenKind from "../lexer/tokenKind";
+import ArrayElementsList from "./lists/arrayElementsList";
 
 export default class Parser
 {
@@ -538,6 +539,8 @@ export default class Parser
         {
             case TokenKind.OpeningParenthesisToken:
                 return this.parseParenthesizedExpression();
+            case TokenKind.OpeningSquareBracketToken:
+                return this.parseArrayLiteralExpression();
             case TokenKind.IntegerToken:
             case TokenKind.StringToken:
             case TokenKind.TrueKeyword:
@@ -563,6 +566,15 @@ export default class Parser
         const closing = this.consumeNextToken();
 
         return new SyntaxNodes.ParenthesizedExpression(opening, expression, closing);
+    }
+
+    private parseArrayLiteralExpression (): SyntaxNodes.ArrayLiteralExpression
+    {
+        const opening = this.consumeNextToken();
+        const elements = this.parseArrayElements();
+        const closing = this.consumeNextToken();
+
+        return new SyntaxNodes.ArrayLiteralExpression(opening, elements, closing);
     }
 
     private parseLiteralExpression (): SyntaxNodes.LiteralExpression
@@ -615,6 +627,29 @@ export default class Parser
         }
 
         return new CallArgumentsList(expressions, separators);
+    }
+
+    private parseArrayElements (): ArrayElementsList
+    {
+        const elements: SyntaxNodes.Expression[] = [];
+        const separators: Token[] = [];
+
+        while ((this.getCurrentToken().kind != TokenKind.ClosingSquareBracketToken) && (this.getCurrentToken().kind != TokenKind.NoToken))
+        {
+            const element = this.parseExpression();
+            elements.push(element);
+
+            if (this.getCurrentToken().kind == TokenKind.CommaToken)
+            {
+                separators.push(this.consumeNextToken());
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return new ArrayElementsList(elements, separators);
     }
 
     private parseVariableExpression (): SyntaxNodes.VariableExpression

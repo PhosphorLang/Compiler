@@ -1,7 +1,8 @@
 import * as SyntaxNodes from '../../src/parser/syntaxNodes';
-import CallArgumentsList from '../../src/parser/callArgumentsList';
+import ArrayElementsList from '../../src/parser/lists/arrayElementsList';
+import CallArgumentsList from '../../src/parser/lists/callArgumentsList';
 import Defaults from './defaults';
-import FunctionParametersList from '../../src/parser/functionParametersList';
+import FunctionParametersList from '../../src/parser/lists/functionParametersList';
 import Token from '../../src/lexer/token';
 import TokenCreator from './tokenCreator';
 
@@ -128,6 +129,27 @@ export default abstract class SyntaxCreator
     public static newFalseBooleanLiteral (): SyntaxNodes.LiteralExpression
     {
         return new SyntaxNodes.LiteralExpression(TokenCreator.newFalseKeyword());
+    }
+
+    public static newArrayLiteral (arrayElements = this.newArrayElementsList()): SyntaxNodes.ArrayLiteralExpression
+    {
+        return new SyntaxNodes.ArrayLiteralExpression(
+            TokenCreator.newOpeningSquareBracket(),
+            arrayElements,
+            TokenCreator.newClosingSquareBracket()
+        );
+    }
+
+    public static newArrayElementsList (elements: SyntaxNodes.Expression[] = []): ArrayElementsList
+    {
+        const separators: Token[] = [];
+
+        for (let i = 0; i < elements.length - 1; i++) // - 1 because we need one separator less than elements.
+        {
+            separators.push(TokenCreator.newComma());
+        }
+
+        return new ArrayElementsList(elements, separators);
     }
 
     public static newBinaryExpression (left: SyntaxNodes.Expression, operator: Token, right: SyntaxNodes.Expression): SyntaxNodes.BinaryExpression

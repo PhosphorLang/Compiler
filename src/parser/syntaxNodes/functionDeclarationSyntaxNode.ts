@@ -1,4 +1,4 @@
-import FunctionParametersList from "../functionParametersList";
+import FunctionParametersList from "../lists/functionParametersList";
 import SectionSyntaxNode from "./sectionSyntaxNode";
 import SyntaxKind from "../syntaxKind";
 import SyntaxNode from "./syntaxNode";

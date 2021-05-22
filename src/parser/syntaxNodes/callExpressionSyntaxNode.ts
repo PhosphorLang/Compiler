@@ -1,4 +1,4 @@
-import CallArgumentsList from "../callArgumentsList";
+import CallArgumentsList from "../lists/callArgumentsList";
 import ExpressionSyntaxNode from "./expressionSyntaxNode";
 import SyntaxKind from "../syntaxKind";
 import SyntaxNode from "./syntaxNode";

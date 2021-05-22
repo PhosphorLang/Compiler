@@ -50,6 +50,16 @@ export default abstract class TokenCreator
         return new Token(TokenKind.ClosingBraceToken, '}');
     }
 
+    public static newOpeningSquareBracket (): Token
+    {
+        return new Token(TokenKind.OpeningSquareBracketToken, '[');
+    }
+
+    public static newClosingSquareBracket (): Token
+    {
+        return new Token(TokenKind.ClosingSquareBracketToken, ']');
+    }
+
     public static newColon (): Token
     {
         return new Token(TokenKind.ColonToken, ':');
